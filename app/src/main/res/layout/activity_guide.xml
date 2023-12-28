@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
+
+        <include
+            android:id="@+id/header_view"
+            layout="@layout/view_header_layout" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/shape_top_frame_line"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/header_view">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/ll_control"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <include
+                        android:id="@+id/view_control_1"
+                        layout="@layout/item_control_layout" />
+
+                    <include
+                        android:id="@+id/view_control_2"
+                        layout="@layout/item_control_layout" />
+
+                    <include
+                        android:id="@+id/view_control_3"
+                        layout="@layout/item_control_layout" />
+
+                    <include
+                        android:id="@+id/view_control_4"
+                        layout="@layout/item_control_layout" />
+
+                    <include
+                        android:id="@+id/view_control_5"
+                        layout="@layout/item_control_layout" />
+
+                    <include
+                        android:id="@+id/view_control_6"
+                        layout="@layout/item_control_layout" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_start"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@drawable/shape_top_bar_frame_0e71e9"
+                    android:gravity="center"
+                    android:padding="12dp"
+                    android:text="确认"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

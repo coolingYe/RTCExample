@@ -1,0 +1,61 @@
+plugins {
+    id 'com.android.library'
+}
+
+android {
+    namespace 'com.zeewain'
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 24
+        targetSdk 33
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    packagingOptions {
+        exclude("version.txt")
+        exclude("META-INF/spring.factories")
+        exclude("META-INF/INDEX.LIST")
+        exclude("META-INF/io.netty.versions.properties")
+    }
+
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+
+    api("io.github.haiyangwu:mediasoup-client:3.4.0")
+
+    implementation files('libs/netty-protocol-1.3.1-SNAPSHOT.jar')
+    implementation files('libs/netty-spring-boot-starter-1.3.1-SNAPSHOT.jar')
+    implementation files('libs/netty-android-1.3.1-SNAPSHOT.jar')
+    api files('libs/fastjson-1.2.83.jar')
+
+    implementation("io.netty:netty-all:4.1.86.Final")
+    implementation("cn.hutool:hutool-all:5.8.18")
+    implementation("com.jcraft:jzlib:1.1.3")
+    implementation("com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava")
+    implementation("com.google.protobuf:protobuf-java:3.7.1")
+    implementation("com.google.protobuf:protobuf-java-util:3.7.1")
+    implementation("org.slf4j:slf4j-api:1.7.32")
+    implementation("org.reactivestreams:reactive-streams:1.0.4")
+
+
+    testImplementation("org.slf4j:slf4j-simple:1.7.32")
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}

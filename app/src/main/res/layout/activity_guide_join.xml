@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <include
+        android:id="@+id/header_create_meeting"
+        layout="@layout/view_header_layout" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#F8F6F8"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header_create_meeting">
+
+        <LinearLayout
+            android:id="@+id/cl_option_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/edit_meeting_id"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/shape_top_bottom_frame_line"
+                android:gravity="center"
+                android:hint="@string/room_id"
+                android:textColorHint="#A5A5A5"
+                android:textSize="16sp"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/edit_display_name"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/shape_top_bottom_frame_line"
+                android:gravity="center"
+                android:hint="@string/display_name"
+                android:textColorHint="#A5A5A5"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@+id/edit_meeting_id" />
+
+            <EditText
+                android:id="@+id/edit_display_background"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/shape_top_bottom_frame_line"
+                android:gravity="center"
+                android:hint="@string/meeting_background"
+                android:textColorHint="#A5A5A5"
+                android:textSize="16sp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/edit_meeting_id" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/btn_create_meeting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/shape_top_bar_frame_e9e9ee"
+            android:gravity="center"
+            android:padding="12dp"
+            android:text="@string/join_meeting"
+            android:textColor="#909095"
+            android:enabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cl_option_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:textColor="#777578"
+            android:textSize="15sp"
+            android:text="@string/room_options" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/shape_top_frame_line"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/not_auto_connect_audio"
+                layout="@layout/item_option_layout" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/shape_top_frame_line" />
+
+            <include
+                android:id="@+id/not_auto_open_camera"
+                layout="@layout/item_option_layout" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
