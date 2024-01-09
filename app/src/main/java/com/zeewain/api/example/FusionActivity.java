@@ -274,13 +274,18 @@ public class FusionActivity extends AppCompatActivity implements EasyPermissions
         }
 
         @Override
-        public void onJoinChannelSuccess(String channel, String uid) {
+        public void onJoinChannelSuccess(String uid) {
             handler.post(() -> Toast.makeText(FusionActivity.this, "onJoinChannelSuccess() :" + uid, Toast.LENGTH_SHORT).show());
         }
 
         @Override
         public void onLeaveChannel() {
             finish();
+        }
+
+        @Override
+        public void onCloseChannel() {
+
         }
 
         @Override
@@ -324,6 +329,11 @@ public class FusionActivity extends AppCompatActivity implements EasyPermissions
                     mRtcEngine.setupRemoteVideo(fusionView, uid);
                 }
             });
+        }
+
+        @Override
+        public void onUserMessage(String s, String s1) {
+
         }
     };
 

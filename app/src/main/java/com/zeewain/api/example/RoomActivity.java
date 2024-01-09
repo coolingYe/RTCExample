@@ -26,6 +26,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.zeewain.rtc.IRtcEngineEventHandler;
 import com.zeewain.rtc.RtcEngine;
 import com.zeewain.rtc.RtcEngineConfig;
+import com.zeewain.rtc.model.CameraCapturerConfiguration;
 import com.zeewain.utils.CommonUtils;
 
 import org.webrtc.SurfaceViewRenderer;
@@ -87,6 +88,7 @@ public class RoomActivity extends AppCompatActivity implements EasyPermissions.P
 
     private void joinChannel() {
         videoReportLayout.removeAllViews();
+        mRtcEngine.setupCameraCapturerConfiguration(new CameraCapturerConfiguration(CameraCapturerConfiguration.CAMERA_DIRECTION.CAMERA_REAR));
         mRtcEngine.joinChannel();
         if (cameraEnable) {
             mRtcEngine.enableVideo();
@@ -221,11 +223,16 @@ public class RoomActivity extends AppCompatActivity implements EasyPermissions.P
         }
 
         @Override
-        public void onJoinChannelSuccess(String channel, String uid) {
+        public void onJoinChannelSuccess( String uid) {
         }
 
         @Override
         public void onLeaveChannel() {
+            finish();
+        }
+
+        @Override
+        public void onCloseChannel() {
             finish();
         }
 
@@ -283,6 +290,11 @@ public class RoomActivity extends AppCompatActivity implements EasyPermissions.P
                     }
                 }
             });
+        }
+
+        @Override
+        public void onUserMessage(String s, String s1) {
+
         }
     };
 
