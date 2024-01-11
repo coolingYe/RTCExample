@@ -40,6 +40,7 @@ import com.zeewain.api.example.utils.DisplayUtil;
 import com.zeewain.rtc.IRtcEngineEventHandler;
 import com.zeewain.rtc.RtcEngine;
 import com.zeewain.rtc.RtcEngineConfig;
+import com.zeewain.rtc.model.CameraCapturerConfiguration;
 import com.zeewain.utils.CommonUtils;
 
 import org.webrtc.SurfaceViewRenderer;
@@ -137,6 +138,7 @@ public class FusionActivity extends AppCompatActivity implements EasyPermissions
 
     private void joinChannel() {
         videoReportLayout.removeAllViews();
+        mRtcEngine.setupCameraCapturerConfiguration(new CameraCapturerConfiguration(CameraCapturerConfiguration.CAMERA_DIRECTION.CAMERA_FRONT));
         mRtcEngine.joinChannel();
         if (cameraEnable) {
             ivVideo.setImageResource(R.drawable.ic_webcam_on);
@@ -285,7 +287,7 @@ public class FusionActivity extends AppCompatActivity implements EasyPermissions
 
         @Override
         public void onCloseChannel() {
-
+            finish();
         }
 
         @Override

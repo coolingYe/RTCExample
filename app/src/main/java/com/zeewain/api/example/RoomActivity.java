@@ -88,7 +88,7 @@ public class RoomActivity extends AppCompatActivity implements EasyPermissions.P
 
     private void joinChannel() {
         videoReportLayout.removeAllViews();
-        mRtcEngine.setupCameraCapturerConfiguration(new CameraCapturerConfiguration(CameraCapturerConfiguration.CAMERA_DIRECTION.CAMERA_REAR));
+        mRtcEngine.setupCameraCapturerConfiguration(new CameraCapturerConfiguration(CameraCapturerConfiguration.CAMERA_DIRECTION.CAMERA_FRONT));
         mRtcEngine.joinChannel();
         if (cameraEnable) {
             mRtcEngine.enableVideo();
@@ -294,7 +294,7 @@ public class RoomActivity extends AppCompatActivity implements EasyPermissions.P
 
         @Override
         public void onUserMessage(String s, String s1) {
-
+            handler.post(() -> Toast.makeText(RoomActivity.this, s + ": " + s1, Toast.LENGTH_SHORT).show());
         }
     };
 
