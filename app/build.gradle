@@ -45,6 +45,6 @@ dependencies {
 
     implementation 'pub.devrel:easypermissions:3.0.0'
 
-    api files("libs/rtc-sdk-debug.aar")
+    api files("libs/zw-rtc-sdk.aar")
 
 }

@@ -115,7 +115,6 @@ public class FusionActivity extends AppCompatActivity implements EasyPermissions
         config.mContext = FusionActivity.this;
         config.mChannelProfile = 1;
         config.mRoomId = roomId;
-        config.mServerUrl = "192.168.0.121";
         config.mAppId = getString(R.string.zwrtc_app_id);
         config.mUserToken = getString(R.string.zwrtc_fusion_token);
         config.mDisplayName = displayName;

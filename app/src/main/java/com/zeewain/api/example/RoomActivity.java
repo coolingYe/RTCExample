@@ -65,7 +65,6 @@ public class RoomActivity extends AppCompatActivity implements EasyPermissions.P
         config = new RtcEngineConfig();
         config.mContext = RoomActivity.this;
         config.mRoomId = roomId;
-        config.mServerUrl = "192.168.0.121";
         config.mAppId = getString(R.string.zwrtc_app_id);
         config.mUserToken = getString(R.string.zwrtc_token);
         config.mDisplayName = displayName;
@@ -93,19 +92,19 @@ public class RoomActivity extends AppCompatActivity implements EasyPermissions.P
         if (cameraEnable) {
             mRtcEngine.enableVideo();
             setTextImageTopDrawable(R.drawable.ic_webcam_on, tvVideo);
-            tvVideo.setText("Stop Camera");
+            tvVideo.setText(getString(R.string.stop_camera));
         } else {
             setTextImageTopDrawable(R.drawable.ic_webcam_off, tvVideo);
-            tvVideo.setText("Open Camera");
+            tvVideo.setText(getString(R.string.open_camera));
         }
 
         if (audioEnable) {
             mRtcEngine.enableAudio();
             setTextImageTopDrawable(R.drawable.ic_mic_on, tvAudio);
-            tvAudio.setText("Mute");
+            tvAudio.setText(getString(R.string.mute));
         } else {
             setTextImageTopDrawable(R.drawable.ic_mic_off, tvAudio);
-            tvAudio.setText("Talk");
+            tvAudio.setText(getString(R.string.talk));
         }
 
         View view = View.inflate(this, R.layout.item_player_layout, null);
@@ -168,22 +167,22 @@ public class RoomActivity extends AppCompatActivity implements EasyPermissions.P
             if (mRtcEngine.hasVideoAvailable()) {
                 mRtcEngine.disableVideo();
                 setTextImageTopDrawable(R.drawable.ic_webcam_off, tvVideo);
-                tvVideo.setText("Open Camera");
+                tvVideo.setText(getString(R.string.open_camera));
             } else {
                 mRtcEngine.enableVideo();
                 setTextImageTopDrawable(R.drawable.ic_webcam_on, tvVideo);
-                tvVideo.setText("Stop Camera");
+                tvVideo.setText(getString(R.string.stop_camera));
             }
         }
         if (v.getId() == R.id.tv_meeting_audio) {
             if (mRtcEngine.hasAudioAvailable()) {
                 mRtcEngine.disableAudio();
                 setTextImageTopDrawable(R.drawable.ic_mic_off, tvAudio);
-                tvAudio.setText("Talk");
+                tvAudio.setText(getString(R.string.talk));
             } else {
                 mRtcEngine.enableAudio();
                 setTextImageTopDrawable(R.drawable.ic_mic_on, tvAudio);
-                tvAudio.setText("Mute");
+                tvAudio.setText(getString(R.string.mute));
             }
         }
         if (v.getId() == R.id.iv_meeting_switch_camera) {
