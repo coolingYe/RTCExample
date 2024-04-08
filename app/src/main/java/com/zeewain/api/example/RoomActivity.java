@@ -26,7 +26,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.zeewain.rtc.IRtcEngineEventHandler;
 import com.zeewain.rtc.RtcEngine;
 import com.zeewain.rtc.RtcEngineConfig;
-import com.zeewain.rtc.model.CameraCapturerConfiguration;
+import com.zeewain.rtc.model.CameraConfig;
 import com.zeewain.utils.CommonUtils;
 
 import org.webrtc.SurfaceViewRenderer;
@@ -63,13 +63,13 @@ public class RoomActivity extends AppCompatActivity implements EasyPermissions.P
         audioEnable = getIntent().getBooleanExtra("audioEnable", false);
 
         config = new RtcEngineConfig();
-        config.mContext = RoomActivity.this;
-        config.mRoomId = roomId;
-        config.mAppId = getString(R.string.zwrtc_app_id);
-        config.mUserToken = getString(R.string.zwrtc_token);
-        config.mDisplayName = displayName;
-        config.mUserId = CommonUtils.getRandomString(8);
-        config.mEventHandler = iRtcEngineEventHandler;
+        config.context = RoomActivity.this;
+        config.roomId = roomId;
+        config.appId = getString(R.string.zwrtc_app_id);
+        config.token = getString(R.string.zwrtc_token);
+        config.displayName = displayName;
+        config.userId = CommonUtils.getRandomString(8);
+        config.eventHandler = iRtcEngineEventHandler;
 
         mRtcEngine = RtcEngine.create(config);
 
@@ -84,11 +84,12 @@ public class RoomActivity extends AppCompatActivity implements EasyPermissions.P
         } else joinChannel();
     }
 
-
     private void joinChannel() {
         videoReportLayout.removeAllViews();
-        mRtcEngine.setupCameraCapturerConfiguration(new CameraCapturerConfiguration(CameraCapturerConfiguration.CAMERA_DIRECTION.CAMERA_FRONT));
-        mRtcEngine.joinChannel();
+        mRtcEngine.setupCameraConfig(new CameraConfig(CameraConfig.CAMERA_DIRECTION.CAMERA_FRONT));
+        if (mRtcEngine.joinChannel() != 0) {
+            finish();
+        }
         if (cameraEnable) {
             mRtcEngine.enableVideo();
             setTextImageTopDrawable(R.drawable.ic_webcam_on, tvVideo);
@@ -113,8 +114,8 @@ public class RoomActivity extends AppCompatActivity implements EasyPermissions.P
         surfaceView.getLayoutParams().height = getWindowWidth() / lineCount;
         surfaceView.setVisibility(View.VISIBLE);
         TextView textView = view.findViewById(R.id.tv_consume_name);
-        textView.setText(config.mUserId);
-        view.setTag(config.mUserId);
+        textView.setText(config.userId);
+        view.setTag(config.userId);
         mRtcEngine.setupLocalVideo(surfaceView);
         videoReportLayout.addView(view);
     }
@@ -164,7 +165,7 @@ public class RoomActivity extends AppCompatActivity implements EasyPermissions.P
             mRtcEngine.closeChannel();
         }
         if (v.getId() == R.id.tv_meeting_video) {
-            if (mRtcEngine.hasVideoAvailable()) {
+            if (mRtcEngine.hasVideoAvailable() == 0) {
                 mRtcEngine.disableVideo();
                 setTextImageTopDrawable(R.drawable.ic_webcam_off, tvVideo);
                 tvVideo.setText(getString(R.string.open_camera));
@@ -175,7 +176,7 @@ public class RoomActivity extends AppCompatActivity implements EasyPermissions.P
             }
         }
         if (v.getId() == R.id.tv_meeting_audio) {
-            if (mRtcEngine.hasAudioAvailable()) {
+            if (mRtcEngine.hasAudioAvailable() == 0) {
                 mRtcEngine.disableAudio();
                 setTextImageTopDrawable(R.drawable.ic_mic_off, tvAudio);
                 tvAudio.setText(getString(R.string.talk));

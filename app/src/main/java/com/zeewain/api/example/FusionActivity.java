@@ -40,7 +40,7 @@ import com.zeewain.api.example.utils.DisplayUtil;
 import com.zeewain.rtc.IRtcEngineEventHandler;
 import com.zeewain.rtc.RtcEngine;
 import com.zeewain.rtc.RtcEngineConfig;
-import com.zeewain.rtc.model.CameraCapturerConfiguration;
+import com.zeewain.rtc.model.CameraConfig;
 import com.zeewain.utils.CommonUtils;
 
 import org.webrtc.SurfaceViewRenderer;
@@ -112,15 +112,15 @@ public class FusionActivity extends AppCompatActivity implements EasyPermissions
         });
 
         config = new RtcEngineConfig();
-        config.mContext = FusionActivity.this;
-        config.mChannelProfile = 1;
-        config.mRoomId = roomId;
-        config.mAppId = getString(R.string.zwrtc_app_id);
-        config.mUserToken = getString(R.string.zwrtc_fusion_token);
-        config.mDisplayName = displayName;
-        config.mUserId = CommonUtils.getRandomString(8);
-        config.mBackgroundUrl = backgroundUrl;
-        config.mEventHandler = iRtcEngineEventHandler;
+        config.context = FusionActivity.this;
+        config.channelProfile = 1;
+        config.roomId = roomId;
+        config.appId = getString(R.string.zwrtc_app_id);
+        config.token = getString(R.string.zwrtc_fusion_token);
+        config.displayName = displayName;
+        config.userId = CommonUtils.getRandomString(8);
+        config.backgroundUrl = backgroundUrl;
+        config.eventHandler = iRtcEngineEventHandler;
 
         mRtcEngine = RtcEngine.create(config);
 
@@ -137,8 +137,10 @@ public class FusionActivity extends AppCompatActivity implements EasyPermissions
 
     private void joinChannel() {
         videoReportLayout.removeAllViews();
-        mRtcEngine.setupCameraCapturerConfiguration(new CameraCapturerConfiguration(CameraCapturerConfiguration.CAMERA_DIRECTION.CAMERA_FRONT));
-        mRtcEngine.joinChannel();
+        mRtcEngine.setupCameraConfig(new CameraConfig(CameraConfig.CAMERA_DIRECTION.CAMERA_FRONT));
+        if (mRtcEngine.joinChannel() != 0) {
+            finish();
+        }
         if (cameraEnable) {
             ivVideo.setImageResource(R.drawable.ic_webcam_on);
             mRtcEngine.enableVideo();
@@ -159,8 +161,8 @@ public class FusionActivity extends AppCompatActivity implements EasyPermissions
         surfaceView.getLayoutParams().height = (getWindowWidth() / lineCount) - DisplayUtil.dip2px(this, 20);
         surfaceView.setVisibility(View.VISIBLE);
         TextView textView = view.findViewById(R.id.tv_consume_name);
-        textView.setText(config.mUserId);
-        view.setTag(config.mUserId);
+        textView.setText(config.userId);
+        view.setTag(config.userId);
         mRtcEngine.setupLocalVideo(surfaceView);
         videoReportLayout.addView(view);
         tvParticipants.setText(videoReportLayout.getChildCount() + " 人参加");
@@ -230,7 +232,7 @@ public class FusionActivity extends AppCompatActivity implements EasyPermissions
             drawerLayout.openDrawer(Gravity.RIGHT);
         }
         if (v.getId() == R.id.iv_meeting_video) {
-            if (mRtcEngine.hasVideoAvailable()) {
+            if (mRtcEngine.hasVideoAvailable() == 0) {
                 ivVideo.setImageResource(R.drawable.ic_webcam_off);
                 mRtcEngine.disableVideo();
             } else {
@@ -239,7 +241,7 @@ public class FusionActivity extends AppCompatActivity implements EasyPermissions
             }
         }
         if (v.getId() == R.id.iv_meeting_audio) {
-            if (mRtcEngine.hasAudioAvailable()) {
+            if (mRtcEngine.hasAudioAvailable() == 0) {
                 ivAudio.setImageResource(R.drawable.ic_mic_off);
                 mRtcEngine.disableAudio();
             } else {
