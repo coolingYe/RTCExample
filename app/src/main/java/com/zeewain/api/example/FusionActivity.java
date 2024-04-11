@@ -37,11 +37,11 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.zeewain.api.example.model.FusionConfig;
 import com.zeewain.api.example.utils.DisplayUtil;
+import com.zeewain.common.utils.CommonUtils;
 import com.zeewain.rtc.IRtcEngineEventHandler;
 import com.zeewain.rtc.RtcEngine;
 import com.zeewain.rtc.RtcEngineConfig;
 import com.zeewain.rtc.model.CameraConfig;
-import com.zeewain.utils.CommonUtils;
 
 import org.webrtc.SurfaceViewRenderer;
 
@@ -172,8 +172,8 @@ public class FusionActivity extends AppCompatActivity implements EasyPermissions
     @SuppressLint("ClickableViewAccessibility")
     private void initListener() {
         TextView tvMeetingTitle = findViewById(R.id.tv_meeting_title);
-        TextView btnExit = findViewById(R.id.btn_meeting_exit);
-        TextView btnEnd = findViewById(R.id.btn_meeting_end);
+        TextView tvExit = findViewById(R.id.tv_meeting_exit);
+        TextView tvEnd = findViewById(R.id.tv_meeting_end);
         ImageView ivSwitchCamera = findViewById(R.id.iv_meeting_switch_camera);
         ivAudio = findViewById(R.id.iv_meeting_audio);
         ivVideo = findViewById(R.id.iv_meeting_video);
@@ -189,14 +189,20 @@ public class FusionActivity extends AppCompatActivity implements EasyPermissions
 
         tvParticipants.setOnClickListener(this);
         tvMeetingTitle.setOnClickListener(this);
-        btnExit.setOnClickListener(this);
-        btnEnd.setOnClickListener(this);
+        tvExit.setOnClickListener(this);
+        tvEnd.setOnClickListener(this);
         ivSwitchCamera.setOnClickListener(this);
         tvMore.setOnClickListener(this);
         ivAudio.setOnClickListener(this);
         ivVideo.setOnClickListener(this);
         tvChat.setOnClickListener(this);
         tvParticipant.setOnClickListener(this);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
     @Override
@@ -218,10 +224,10 @@ public class FusionActivity extends AppCompatActivity implements EasyPermissions
             clipboard.setPrimaryClip(clip);
             Toast.makeText(this, "链接已复制到剪贴板", Toast.LENGTH_SHORT).show();
         }
-        if (v.getId() == R.id.btn_meeting_exit) {
+        if (v.getId() == R.id.tv_meeting_exit) {
             mRtcEngine.leaveChannel();
         }
-        if (v.getId() == R.id.btn_meeting_end) {
+        if (v.getId() == R.id.tv_meeting_end) {
             mRtcEngine.closeChannel();
         }
         if (v.getId() == R.id.tv_meeting_more) {
@@ -259,26 +265,24 @@ public class FusionActivity extends AppCompatActivity implements EasyPermissions
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-        /**leaveChannel and Destroy the RtcEngine instance*/
         if (mRtcEngine != null) {
             mRtcEngine.leaveChannel();
         }
         destroyVideoTrack();
         handler.post(RtcEngine::destroy);
         mRtcEngine = null;
+        super.onDestroy();
     }
 
     private final IRtcEngineEventHandler iRtcEngineEventHandler = new IRtcEngineEventHandler() {
 
         @Override
         public void onError(int err) {
-
+            handler.post(() -> Toast.makeText(FusionActivity.this, err, Toast.LENGTH_SHORT).show());
         }
 
         @Override
         public void onJoinChannelSuccess(String uid) {
-            handler.post(() -> Toast.makeText(FusionActivity.this, "onJoinChannelSuccess() :" + uid, Toast.LENGTH_SHORT).show());
         }
 
         @Override
@@ -310,7 +314,7 @@ public class FusionActivity extends AppCompatActivity implements EasyPermissions
         @Override
         public void onUserOffline(String uid) {
             handler.post(() -> {
-                Toast.makeText(FusionActivity.this, "onUserOffline() :" + uid, Toast.LENGTH_SHORT).show();
+                if (videoReportLayout == null) return;
                 for (int i = 0; i < videoReportLayout.getChildCount(); i++) {
                     View childView = videoReportLayout.getChildAt(i);
                     if (childView.getTag() != null) {
@@ -336,7 +340,7 @@ public class FusionActivity extends AppCompatActivity implements EasyPermissions
 
         @Override
         public void onUserMessage(String s, String s1) {
-
+            handler.post(() -> Toast.makeText(FusionActivity.this, s + ": " + s1, Toast.LENGTH_SHORT).show());
         }
     };
 

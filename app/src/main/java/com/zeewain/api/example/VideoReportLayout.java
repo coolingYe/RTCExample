@@ -75,14 +75,14 @@ public class VideoReportLayout extends ViewGroup {
         return new MarginLayoutParams(getContext(), attrs);
     }
 
-    private OnTagItemClickListener onTagItemClickListener;
+    private OnTagItemClickListener mTagItemClickListener;
 
     public interface OnTagItemClickListener {
         void onClick(View v);
     }
 
-    public void setOnTagItemClickListener(OnTagItemClickListener onTagItemClickListener) {
-        this.onTagItemClickListener = onTagItemClickListener;
+    public void setTagItemClickListener(OnTagItemClickListener mTagItemClickListener) {
+        this.mTagItemClickListener = mTagItemClickListener;
     }
 
 

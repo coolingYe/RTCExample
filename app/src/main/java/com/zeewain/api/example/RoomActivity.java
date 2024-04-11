@@ -12,7 +12,6 @@ import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,11 +22,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.zeewain.common.utils.CommonUtils;
 import com.zeewain.rtc.IRtcEngineEventHandler;
 import com.zeewain.rtc.RtcEngine;
 import com.zeewain.rtc.RtcEngineConfig;
 import com.zeewain.rtc.model.CameraConfig;
-import com.zeewain.utils.CommonUtils;
 
 import org.webrtc.SurfaceViewRenderer;
 
@@ -37,7 +36,6 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class RoomActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks, View.OnClickListener {
 
-    private String roomId;
     private Boolean cameraEnable;
 
     private Boolean audioEnable;
@@ -46,7 +44,8 @@ public class RoomActivity extends AppCompatActivity implements EasyPermissions.P
     private RtcEngine mRtcEngine;
     protected Handler handler;
 
-    private TextView tvAudio, tvVideo, tvChat, tvParticipant;
+    private TextView tvAudio;
+    private TextView tvVideo;
     private VideoReportLayout videoReportLayout;
     private static final int lineCount = 3;
 
@@ -57,7 +56,7 @@ public class RoomActivity extends AppCompatActivity implements EasyPermissions.P
         videoReportLayout = findViewById(R.id.videoReportLayout);
 
         handler = new Handler(Looper.getMainLooper());
-        roomId = getIntent().getStringExtra("roomId");
+        String roomId = getIntent().getStringExtra("roomId");
         String displayName = getIntent().getStringExtra("displayName");
         cameraEnable = getIntent().getBooleanExtra("cameraEnable", false);
         audioEnable = getIntent().getBooleanExtra("audioEnable", false);
@@ -122,22 +121,28 @@ public class RoomActivity extends AppCompatActivity implements EasyPermissions.P
 
     private void initListener() {
         TextView tvMeetingTitle = findViewById(R.id.tv_meeting_title);
-        Button btnExit = findViewById(R.id.btn_meeting_exit);
-        Button btnEnd = findViewById(R.id.btn_meeting_end);
+        TextView tvExit = findViewById(R.id.tv_meeting_exit);
+        TextView tvEnd = findViewById(R.id.tv_meeting_end);
         ImageView ivSwitchCamera = findViewById(R.id.iv_meeting_switch_camera);
         tvAudio = findViewById(R.id.tv_meeting_audio);
         tvVideo = findViewById(R.id.tv_meeting_video);
-        tvChat = findViewById(R.id.tv_chat);
-        tvParticipant = findViewById(R.id.tv_meeting_participants);
+        TextView tvChat = findViewById(R.id.tv_chat);
+        TextView tvParticipant = findViewById(R.id.tv_meeting_participants);
 
         tvMeetingTitle.setOnClickListener(this);
-        btnExit.setOnClickListener(this);
-        btnEnd.setOnClickListener(this);
+        tvExit.setOnClickListener(this);
+        tvEnd.setOnClickListener(this);
         ivSwitchCamera.setOnClickListener(this);
         tvAudio.setOnClickListener(this);
         tvVideo.setOnClickListener(this);
         tvChat.setOnClickListener(this);
         tvParticipant.setOnClickListener(this);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
     @Override
@@ -158,10 +163,10 @@ public class RoomActivity extends AppCompatActivity implements EasyPermissions.P
             clipboard.setPrimaryClip(clip);
             Toast.makeText(this, "链接已复制到剪贴板", Toast.LENGTH_SHORT).show();
         }
-        if (v.getId() == R.id.btn_meeting_exit) {
+        if (v.getId() == R.id.tv_meeting_exit) {
             mRtcEngine.leaveChannel();
         }
-        if (v.getId() == R.id.btn_meeting_end) {
+        if (v.getId() == R.id.tv_meeting_end) {
             mRtcEngine.closeChannel();
         }
         if (v.getId() == R.id.tv_meeting_video) {
@@ -196,21 +201,20 @@ public class RoomActivity extends AppCompatActivity implements EasyPermissions.P
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-        /**leaveChannel and Destroy the RtcEngine instance*/
         if (mRtcEngine != null) {
             mRtcEngine.leaveChannel();
         }
         destroyVideoTrack();
         handler.post(RtcEngine::destroy);
         mRtcEngine = null;
+        super.onDestroy();
     }
 
     private final IRtcEngineEventHandler iRtcEngineEventHandler = new IRtcEngineEventHandler() {
 
         @Override
         public void onError(int err) {
-
+            handler.post(() -> Toast.makeText(RoomActivity.this, err, Toast.LENGTH_SHORT).show());
         }
 
         @Override
@@ -246,6 +250,7 @@ public class RoomActivity extends AppCompatActivity implements EasyPermissions.P
         @Override
         public void onUserOffline(String uid) {
             handler.post(() -> {
+                if (videoReportLayout == null) return;
                 for (int i = 0; i < videoReportLayout.getChildCount(); i++) {
                     View childView = videoReportLayout.getChildAt(i);
                     if (childView.getTag() != null) {

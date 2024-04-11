@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
-import com.zeewain.utils.CommonUtils;
+import com.zeewain.common.utils.CommonUtils;
 
 public class NewMeetingGuideActivity extends AppCompatActivity {
 
